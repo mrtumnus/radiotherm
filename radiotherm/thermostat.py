@@ -213,6 +213,19 @@ class CT80(CommonThermostat):
 
     humidifier_setpoint = fields.Field('/tstat/thumidity', 'thumidity')
 
+    ### methods ###
+    def set_message(self, line, message):
+        """
+        Sets a line in the user messaging area.
+
+        :param line:        Line 0 or 1
+        :param message:     Message to display
+        """
+        if (line > 1 or line < 0):
+            raise ValueError('Invalid line number, must be 0 or 1')
+        msg_json = {'line': line, 'message': message}
+        self.post('/tstat/uma', json.dumps(msg_json).encode('utf-8'))
+
 
 class CT80RevB(CT80):
     """
