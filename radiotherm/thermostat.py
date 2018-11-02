@@ -161,6 +161,26 @@ class CommonThermostat(Thermostat):
         """
         self.post('/tstat/program/%s/%s' % (heat_cool, day), json.dumps(program).encode('utf-8'))
 
+    def set_time(self, day, hour, minute):
+        """
+        Sets thermostat time
+
+        :param day:         Integer value representing the day of the week,
+                            with day 0 being Monday
+        :param hour:        Integer value representing number of hours elapsed
+                            since midnight.
+        :param minute:      Integer value representing number of minutes elapsed
+                            since start of the hour.
+        """
+        if not isinstance(day, int) or day > 6 or day < 0:
+            raise ValueError('Invalid day of week, must be 0-6')
+        if not isinstance(hour, int) or hour > 23 or hour < 0:
+            raise ValueError('Invalid hour, must be 0-23')
+        if not isinstance(minute, int) or minute > 59 or minute < 0:
+            raise ValueError('Invalid minute, must be 0-59')
+        json_obj = {'day': day, 'hour': hour, 'minute': minute}
+        self.post('/tstat/time', json.dumps(json_obj).encode('utf-8'))
+
 
 class CT30(CommonThermostat):
     """
